@@ -23,21 +23,46 @@ const initialFormError= {
   name: ''
 }
 
+const initialOrders = [];
+
 const App = () => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formError, setFormError] = useState(initialFormError);
+  const [orders, setOrders] = useState(initialOrders);
 
   const validate = (name, value) => {
     yup.reach(schema, name)
       .validate(value)
-      .then(() => setFormError({ ...formError, [name]: '' }))
-      .catch(error => setFormError({ ...formError, [name]: error.errors[0] }))
+      .then(() => setFormError({ [name]: '' }))
+      .catch(error => setFormError({ [name]: error.errors[0] }))
   }
 
   const inputChange = (name, value) => {
     validate(name, value);
     setFormValues({ ...formValues, [name]: value })
   }
+
+  const postNewOrder = newOrder => {
+    axios.post('https://reqres.in/api/orders', newOrder)
+      .then(response => {
+        setOrders([ response.data, ...orders ]);
+        setFormValues(initialFormValues);
+      })
+      .catch(error => console.error(error));
+  }
+
+  const formSubmit = () => {
+    const newOrder = {
+        name: formValues.name.trim(),
+        size: formValues.size.trim(),
+        sausage: formValues.sausage,
+        onions: formValues.onions,
+        ham: formValues.ham,
+        pineapple: formValues.pineapple,
+        instructions: formValues.instructions.trim()
+    }
+    postNewOrder(newOrder);
+}
 
   return (
     <div className='App'>
@@ -48,7 +73,13 @@ const App = () => {
       </nav>
       <Switch>
         <Route path='/pizza'>
-          <PizzaForm id='pizza-form' values={formValues} error={formError} change={inputChange} />
+          <PizzaForm
+            id='pizza-form'
+            values={formValues}
+            error={formError}
+            change={inputChange}
+            submit={formSubmit}
+          />
         </Route>
         <Route path='/'>
           <Home />
