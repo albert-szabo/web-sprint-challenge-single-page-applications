@@ -1,6 +1,7 @@
 import React from 'react';
 
 export default function PizzaForm(props) {
+    const { values, error } = props;
 
     const onSubmit = event => {
 
@@ -9,13 +10,13 @@ export default function PizzaForm(props) {
     const onChange = event => {
 
     }
-    
+
     return (
         <form id='pizza-form' onSubmit={onSubmit}>
             <h2>Build Your Pizza</h2>
 
             <div className='errors'>
-                <div>{errors.name}</div>
+                <div>{error.name}</div>
             </div>
 
             <label>Name:
