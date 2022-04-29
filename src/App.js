@@ -7,7 +7,7 @@ import PizzaForm from './components/PizzaForm';
 
 import axios from 'axios';
 import schema from './validation/formSchema';
-// import * as yup from 'yup';
+import * as yup from 'yup';
 
 const initialFormValues = {
   name: '',
@@ -27,6 +27,18 @@ const App = () => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formError, setFormError] = useState(initialFormError);
 
+  const validate = (name, value) => {
+    yup.reach(schema, name)
+      .validate(value)
+      .then(() => setFormError({ ...formError, [name]: '' }))
+      .catch(error => setFormError({ ...formError, [name]: error.errors[0] }))
+  }
+
+  const inputChange = (name, value) => {
+    validate(name, value);
+    setFormValues({ ...formValues, [name]: value })
+  }
+
   return (
     <div className='App'>
       <h1>Lambda Eats</h1>
@@ -36,7 +48,7 @@ const App = () => {
       </nav>
       <Switch>
         <Route path='/pizza'>
-          <PizzaForm id='pizza-form' values={formValues} error={formError} />
+          <PizzaForm id='pizza-form' values={formValues} error={formError} change={inputChange} />
         </Route>
         <Route path='/'>
           <Home />

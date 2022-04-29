@@ -1,14 +1,16 @@
 import React from 'react';
 
 export default function PizzaForm(props) {
-    const { values, error } = props;
+    const { values, error, change } = props;
 
     const onSubmit = event => {
 
     }
 
     const onChange = event => {
-
+        const { name, value, checked, type } = event.target;
+        const valueToUse = type === 'checkbox' ? checked : value;
+        change(name, valueToUse);
     }
 
     return (
