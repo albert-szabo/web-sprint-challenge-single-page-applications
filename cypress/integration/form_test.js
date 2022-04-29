@@ -26,10 +26,6 @@ describe('Pizza Order Form', () => {
         cy.contains('Add to Order').should('exist');
     })
 
-    // test that you can add text to the box
-    // test that you can select multiple toppings
-    // test that you can submit the form
-
     describe('Filling out the name box', () => {
         it('Can navigate to the site', () => {
             cy.url().should('include', 'localhost');
